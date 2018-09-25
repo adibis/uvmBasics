@@ -3,7 +3,7 @@ class APB_Scoreboard extends uvm_scoreboard;
 
     uvm_analysis_imp#(APB_Tr, APB_Scoreboard) m_fifo_h;
     int error_count;
-    logic [15:0] RAM_MODEL[int];
+    bit [15:0] RAM_MODEL[int];
 
     function new(string name = "<anon>", uvm_component parent);
         super.new(name, parent);

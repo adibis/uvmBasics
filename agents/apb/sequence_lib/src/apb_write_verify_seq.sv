@@ -29,7 +29,7 @@ class apb_write_verify_seq extends uvm_sequence#(APB_Tr);
             // need to get the sequencer for this sequence and then obtain the
             // configuration object.
             assert(uvm_config_db#(apb_cfg)::get(get_sequencer(), "", "apb_cfg", m_apb_cfg));
-            `uvm_info(get_type_name(), $sformatf("Address range from configuration: [%h:%h]", m_apb_cfg.min_m_addr, m_apb_cfg.max_m_addr), UVM_NONE);
+            `uvm_info(get_type_name(), $sformatf("Address range from configuration: [%h:%h]", m_apb_cfg.min_m_addr, m_apb_cfg.max_m_addr), UVM_DEBUG);
             assert(m_apb_write_seq.randomize() with {m_apb_write_seq.m_addr inside {[m_apb_cfg.min_m_addr:m_apb_cfg.max_m_addr]};});
             // Generate a read sequence with the same address as the write
             // sequence.

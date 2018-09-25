@@ -1,5 +1,8 @@
-`ifndef APB__WRITE__VERIFY__TEST__SV
-`define APB__WRITE__VERIFY__TEST__SV
+// ---------- INFO ----------------------------------------------------------
+// This test demonstrates how to start sequences from a test and use them.
+// --------------------------------------------------------------------------
+`ifndef APB_WRITE_VERIFY_TEST__SV
+`define APB_WRITE_VERIFY_TEST__SV
 class apb_write_verify_test extends apb_base_test;
     `uvm_component_utils(apb_write_verify_test)
 

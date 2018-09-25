@@ -13,6 +13,7 @@ package apb_test_pkg;
     `include "apb_base_test.sv"
     `include "apb_write_verify_test.sv"
     `include "apb_write_verify_error_test.sv"
+    `include "apb_random_read_write_override_test.sv"
 
 endpackage: apb_test_pkg
 `endif

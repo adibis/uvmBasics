@@ -1,3 +1,7 @@
+// ---------- INFO ----------------------------------------------------------
+// This test demonstrates how to use configuration objects to change sequence
+// behavior in the test.
+// --------------------------------------------------------------------------
 `ifndef APB_WRITE_VERIFY_ERROR_TEST__SV
 `define APB_WRITE_VERIFY_ERROR_TEST__SV
 class apb_write_verify_error_test extends apb_base_test;

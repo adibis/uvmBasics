@@ -5,6 +5,7 @@ class apb_cfg extends uvm_object;
 
     uvm_active_passive_enum is_active = UVM_ACTIVE;
 
+    // These decide the address range of the packets.
     logic [15:0] min_m_addr = 16'h0000;
     logic [15:0] max_m_addr = 16'h007f;
 
