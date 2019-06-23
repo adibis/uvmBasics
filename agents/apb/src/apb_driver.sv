@@ -23,10 +23,11 @@ class APB_Driver extends uvm_driver#(APB_Tr);
     // Wait for some drain time.
     // TODO: Add reset information instead of this.
     virtual_apb_if.master_cb.psel    <= 1'b0;
-    virtual_apb_if.master_cb.penable    <= 1'b0;
-    virtual_apb_if.master_cb.paddr    <= 16'b0;
-    virtual_apb_if.master_cb.pwdata    <= 16'b0;
-    virtual_apb_if.master_cb.pwrite    <= 1'b0;
+    virtual_apb_if.master_cb.preset  <= 1'b0;
+    virtual_apb_if.master_cb.penable <= 1'b0;
+    virtual_apb_if.master_cb.paddr   <= 16'b0;
+    virtual_apb_if.master_cb.pwdata  <= 16'b0;
+    virtual_apb_if.master_cb.pwrite  <= 1'b0;
     repeat(3)
         @virtual_apb_if.master_cb;
 
@@ -35,9 +36,9 @@ class APB_Driver extends uvm_driver#(APB_Tr);
     // APB_Tr, the APB_Driver accepts them with the get_next_item function.
     forever begin
       virtual_apb_if.master_cb.psel    <= 1'b0;
-      virtual_apb_if.master_cb.pwrite    <= 1'b0;
-      virtual_apb_if.master_cb.paddr    <= 16'b0;
-      virtual_apb_if.master_cb.pwdata    <= 16'b0;
+      virtual_apb_if.master_cb.pwrite  <= 1'b0;
+      virtual_apb_if.master_cb.paddr   <= 16'b0;
+      virtual_apb_if.master_cb.pwdata  <= 16'b0;
       virtual_apb_if.master_cb.penable <= 1'b0;
       repeat(6)
           @virtual_apb_if.master_cb;

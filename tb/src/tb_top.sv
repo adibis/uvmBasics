@@ -11,6 +11,7 @@ reg pclk;
 APB_If    apb_slave_if(pclk);
 APB_dummy DUT(
     .PCLK   (pclk),
+    .PRESET (apb_slave_if.preset ),
     .PENABLE(apb_slave_if.penable),
     .PSEL   (apb_slave_if.psel   ),   //   Connect DUT ports to
     .PWRITE (apb_slave_if.pwrite ),   //   appropriate signals in the

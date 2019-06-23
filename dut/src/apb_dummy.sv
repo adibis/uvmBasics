@@ -14,6 +14,7 @@
 
 module APB_dummy (
     input   bit   PCLK,
+    input   bit   PRESET,
     input   logic PENABLE,
     input   logic PSEL,
     input   logic PWRITE,
@@ -39,39 +40,43 @@ initial begin : cycle_reporting
     forever @(posedge PCLK) begin
         clocks++;
         PREADY <= 1'b0;
-        // Handle second cycle of the phase.
-        if (PSEL && PENABLE && PWRITE && PREADY_NEXT) begin // it's a write
-            $display("--------\nAPB write at clocks %0d/%0d, time=%0d:",
-                clocks-1, clocks, $time);
-            $display("  A='h%h, D='h%h, ERROR='h%h", PADDR, PWDATA, PERROR);
-            memArray[PADDR] <= PWDATA;
-            PREADY_NEXT <= 1'b0;
-            PREADY <= 1'b1;
-        end else if (PSEL && PENABLE && !PWRITE && PREADY_NEXT) begin // it's a read
-            // second clock of read, report it
-            $display("--------\nAPB read at clocks %0d/%0d, time=%0d:",
-                clocks-1, clocks, $time);
-            $display("  A='h%h, D='h%h, ERROR='h%h", PADDR, memArray[PADDR], PERROR);
-            PRDATA <= memArray[PADDR];
-            PREADY_NEXT <= 1'b0;
-            PREADY <= 1'b1;
-        end
+        if (PRESET) begin
+            $display("Detected reset!");
+        end else begin
+            // Handle second cycle of the phase.
+            if (PSEL && PENABLE && PWRITE && PREADY_NEXT) begin // it's a write
+                $display("--------\nAPB write at clocks %0d/%0d, time=%0d:",
+                    clocks-1, clocks, $time);
+                $display("  A='h%h, D='h%h, ERROR='h%h", PADDR, PWDATA, PERROR);
+                memArray[PADDR] <= PWDATA;
+                PREADY_NEXT <= 1'b0;
+                PREADY <= 1'b1;
+            end else if (PSEL && PENABLE && !PWRITE && PREADY_NEXT) begin // it's a read
+                // second clock of read, report it
+                $display("--------\nAPB read at clocks %0d/%0d, time=%0d:",
+                    clocks-1, clocks, $time);
+                $display("  A='h%h, D='h%h, ERROR='h%h", PADDR, memArray[PADDR], PERROR);
+                PRDATA <= memArray[PADDR];
+                PREADY_NEXT <= 1'b0;
+                PREADY <= 1'b1;
+            end
 
-        // Handle first cycle of the transfer.
-        if (PSEL && !PENABLE) begin
-            PREADY_NEXT<= $urandom_range(0,1);
-        end
+            // Handle first cycle of the transfer.
+            if (PSEL && !PENABLE) begin
+                PREADY_NEXT<= $urandom_range(0,1);
+            end
 
-        // Handle wait cycle of the transfer.
-        if (PSEL && PENABLE && !PREADY_NEXT) begin
-            PREADY_NEXT<= $urandom_range(0,1);
-        end
+            // Handle wait cycle of the transfer.
+            if (PSEL && PENABLE && !PREADY_NEXT) begin
+                PREADY_NEXT<= $urandom_range(0,1);
+            end
 
-        //if ((PADDR > 128) && PSEL && PENABLE && PREADY_NEXT) begin
-        //    PERROR = 1'b1;
-        //end else begin
-        //    PERROR = 1'b0;
-        //end
+            //if ((PADDR > 128) && PSEL && PENABLE && PREADY_NEXT) begin
+            //    PERROR = 1'b1;
+            //end else begin
+            //    PERROR = 1'b0;
+            //end
+        end // reset
     end
 end : cycle_reporting
 
