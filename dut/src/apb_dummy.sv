@@ -25,7 +25,7 @@ module APB_dummy (
     output  logic PREADY
 );
 
-logic [15:0] memArray[128];
+logic [15:0] memArray[256];
 logic PREADY_NEXT;
 
 // This code reports every active bus cycle to the console.
@@ -71,11 +71,11 @@ initial begin : cycle_reporting
                 PREADY_NEXT<= $urandom_range(0,1);
             end
 
-            //if ((PADDR > 128) && PSEL && PENABLE && PREADY_NEXT) begin
-            //    PERROR = 1'b1;
-            //end else begin
-            //    PERROR = 1'b0;
-            //end
+            if ((PADDR > 128) && PSEL && PENABLE && PREADY_NEXT) begin
+                PERROR = 1'b1;
+            end else begin
+                PERROR = 1'b0;
+            end
         end // reset
     end
 end : cycle_reporting

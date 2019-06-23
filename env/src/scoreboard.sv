@@ -23,11 +23,16 @@ class APB_Scoreboard extends uvm_scoreboard;
     virtual function void compare_data(APB_Tr this_tr);
         `uvm_info(get_type_name(), $sformatf("Checking Read Value: ADDR: %h, PRDATA: %h, EXPECTED: %h",
             this_tr.tr_addr, this_tr.tr_rdata, RAM_MODEL[this_tr.tr_addr]), UVM_NONE)
-        if (this_tr.tr_rdata !== RAM_MODEL[this_tr.tr_addr]) begin
-            `uvm_error(get_type_name(), "ERROR:: Data mismatch")
+        if (this_tr.tr_error) begin
+            `uvm_error(get_type_name(), "ERROR:: PERROR raised by the slave")
             error_count += 1;
         end else begin
-            `uvm_info(get_type_name(), "SUCCESS: Data match", UVM_NONE)
+            if (this_tr.tr_rdata !== RAM_MODEL[this_tr.tr_addr]) begin
+                `uvm_error(get_type_name(), "ERROR:: Data mismatch")
+                error_count += 1;
+            end else begin
+                `uvm_info(get_type_name(), "SUCCESS: Data match", UVM_NONE)
+            end
         end
     endfunction : compare_data
 

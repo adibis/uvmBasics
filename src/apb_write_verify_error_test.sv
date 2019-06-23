@@ -23,7 +23,7 @@ class apb_write_verify_error_test extends apb_base_test;
         m_seq_h = apb_write_verify_seq::type_id::create(.name("m_seq_h"));
         // Override the address constraints to generate out-of-bound addresses which should result in an error.
         m_apb_cfg.min_m_addr=16'h0080;
-        m_apb_cfg.max_m_addr=16'hffff;
+        m_apb_cfg.max_m_addr=16'h00f0;
         assert(m_seq_h.randomize());
         `uvm_info(get_type_name(), {"\n", m_seq_h.sprint()}, UVM_LOW)
 
