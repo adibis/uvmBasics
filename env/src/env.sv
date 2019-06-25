@@ -6,6 +6,7 @@ class env extends uvm_env;
     apb_agent m_apb_agent;
     APB_Scoreboard m_scoreboard;
     env_cfg m_env_cfg;
+    apb_reg_predictor m_apb_reg_predictor;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -22,6 +23,7 @@ class env extends uvm_env;
             // for all the sub-components from here.
             uvm_config_db#(apb_cfg)::set(this, "m_apb_agent*", "apb_cfg", m_env_cfg.m_apb_cfg);
             m_apb_agent = apb_agent::type_id::create(.name("m_apb_agent"), .parent(this));
+            m_apb_reg_predictor = apb_reg_predictor::type_id::create(.name("m_apb_reg_predictor"), .parent(this));
         end
         if(m_env_cfg.has_scoreboard) begin
             m_scoreboard = APB_Scoreboard::type_id::create(.name("m_scoreboard"), .parent(this));
@@ -31,6 +33,11 @@ class env extends uvm_env;
     function void connect_phase( uvm_phase phase );
         super.connect_phase(phase);
         m_apb_agent.apb_ap.connect(m_scoreboard.m_fifo_h);
+        m_env_cfg.m_apb_reg_block.m_reg_map.set_sequencer(.sequencer(m_apb_agent.apb_seqr), .adapter(m_apb_agent.m_reg_adapter));
+        m_env_cfg.m_apb_reg_block.m_reg_map.set_auto_predict(.on(0));
+        m_apb_reg_predictor.map = m_env_cfg.m_apb_reg_block.m_reg_map;
+        m_apb_reg_predictor.adapter = m_apb_agent.m_reg_adapter;
+        m_apb_agent.apb_ap.connect(m_apb_reg_predictor.bus_in);
     endfunction: connect_phase
 endclass: env
 `endif

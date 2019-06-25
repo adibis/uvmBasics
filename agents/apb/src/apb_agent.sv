@@ -8,6 +8,7 @@ class apb_agent extends uvm_agent;
     APB_Driver             apb_drvr;
     APB_Monitor            apb_mon;
     apb_cfg                m_apb_cfg;
+    apb_reg_adapter        m_reg_adapter;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -26,6 +27,7 @@ class apb_agent extends uvm_agent;
             apb_drvr = APB_Driver::type_id::create(.name("apb_drvr"), .parent(this));
         end
         apb_mon  = APB_Monitor::type_id::create(.name("apb_mon"), .parent(this));
+        m_reg_adapter = apb_reg_adapter::type_id::create("m_reg_adapter");
     endfunction: build_phase
 
     // Connect the driver and sequencer.

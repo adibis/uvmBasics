@@ -11,7 +11,9 @@ ROOT := $(CURDIR)
 export ROOT := $(CURDIR)
 WORK_DIR := $(ROOT)/WORK_DIR
 
-compile_files := -f $(ROOT)/agents/apb/src/filelist.f
+compile_files := -f $(ROOT)/regs/src/filelist.f
+compile_files += -f $(ROOT)/agents/apb/src/filelist.f
+compile_files += -f $(ROOT)/sequence_lib/src/filelist.f
 compile_files += -f $(ROOT)/env/src/filelist.f
 compile_files += -f $(ROOT)/tb/src/filelist.f
 compile_files += -f $(ROOT)/src/filelist.f

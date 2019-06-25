@@ -41,14 +41,27 @@ initial begin : cycle_reporting
         clocks++;
         PREADY <= 1'b0;
         if (PRESET) begin
-            $display("Detected reset!");
+            $display("Detected reset!\n\n");
         end else begin
             // Handle second cycle of the phase.
             if (PSEL && PENABLE && PWRITE && PREADY_NEXT) begin // it's a write
                 $display("--------\nAPB write at clocks %0d/%0d, time=%0d:",
                     clocks-1, clocks, $time);
                 $display("  A='h%h, D='h%h, ERROR='h%h", PADDR, PWDATA, PERROR);
-                memArray[PADDR] <= PWDATA;
+                // PADDR = 1 is a read_only shadow register of PADDR = 0
+                if (PADDR == 1 || PADDR == 0) begin
+                    if (PADDR == 0) begin
+                        $display("Detected write to WO register!\n");
+                        memArray[0] <= PWDATA;
+                        memArray[1] <= (PWDATA ^ 16'hFFFF);
+                    end
+                    if (PADDR == 1) begin
+                        $display("Detected write to RO register!\n");
+                        PERROR = 1'b1;
+                    end
+                end else begin
+                    memArray[PADDR] <= PWDATA;
+                end
                 PREADY_NEXT <= 1'b0;
                 PREADY <= 1'b1;
             end else if (PSEL && PENABLE && !PWRITE && PREADY_NEXT) begin // it's a read
@@ -56,7 +69,20 @@ initial begin : cycle_reporting
                 $display("--------\nAPB read at clocks %0d/%0d, time=%0d:",
                     clocks-1, clocks, $time);
                 $display("  A='h%h, D='h%h, ERROR='h%h", PADDR, memArray[PADDR], PERROR);
-                PRDATA <= memArray[PADDR];
+                // PADDR = 1 is a read_only shadow register of PADDR = 0
+                if (PADDR == 1 || PADDR == 0) begin
+                    if (PADDR == 1) begin
+                        $display("Detected read to RO register!\n");
+                        PRDATA <= memArray[1];
+                    end
+                    if (PADDR == 0) begin
+                        $display("Detected read to WO register!\n");
+                        PERROR = 1'b1;
+                        PRDATA <= $urandom;
+                    end
+                end else begin
+                    PRDATA <= memArray[PADDR];
+                end
                 PREADY_NEXT <= 1'b0;
                 PREADY <= 1'b1;
             end
@@ -71,11 +97,20 @@ initial begin : cycle_reporting
                 PREADY_NEXT<= $urandom_range(0,1);
             end
 
+            // Handle error condition (only for illustration purpose)
             if ((PADDR > 128) && PSEL && PENABLE && PREADY_NEXT) begin
                 PERROR = 1'b1;
             end else begin
                 PERROR = 1'b0;
             end
+
+            // Handle the registers (to test RAL methods)
+            // Assume we have 2 registers at addresses 0 to 1.
+            //if ((PADDR < 2) && PSEL && PENABLE && PREADY_NEXT) begin
+                //$display("Detected regsiter operation!\n");
+            //end else begin
+                //$display("Detected memory operation!\n");
+            //end
         end // reset
     end
 end : cycle_reporting

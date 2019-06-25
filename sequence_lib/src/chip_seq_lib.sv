@@ -1,7 +1,6 @@
-`ifndef ENV_PKG__SV
-`define ENV_PKG__SV
-
-package env_pkg;
+`ifndef CHIP_SEQ_LIB__SV
+`define CHIP_SEQ_LIB__SV
+package chip_seq_lib_pkg;
 
     // Standard UVM import & include:
     import uvm_pkg::*;
@@ -13,9 +12,7 @@ package env_pkg;
     import apb_regs_pkg::*;
 
     // Includes:
-    `include "env_cfg.sv"
-    `include "scoreboard.sv"
-    `include "env.sv"
+    `include "apb_register_seq.sv"
 
-endpackage: env_pkg
+endpackage: chip_seq_lib_pkg
 `endif

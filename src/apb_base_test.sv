@@ -2,6 +2,7 @@
 `define APB__BASE__TEST__SV
 import uvm_pkg::*;
 import APB_Package::*;
+import apb_regs_pkg::*;
 
 class apb_base_test extends uvm_test;
     `uvm_component_utils(apb_base_test)
@@ -9,6 +10,7 @@ class apb_base_test extends uvm_test;
     env m_env;
     env_cfg m_env_cfg;
     apb_cfg m_apb_cfg;
+    apb_reg_block m_apb_reg_block;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -16,6 +18,8 @@ class apb_base_test extends uvm_test;
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
+        m_apb_reg_block = apb_reg_block::type_id::create("m_apb_reg_block");
+        m_apb_reg_block.build();
         // Create configuration objects of all agents.
         // Get the interfaces for all agents (set from the tb_top).
         // Connect all env_configuration.child_configurations to
@@ -25,6 +29,7 @@ class apb_base_test extends uvm_test;
         m_apb_cfg = apb_cfg::type_id::create(.name("m_apb_cfg"), .parent(this));
         assert(uvm_config_db#(virtual APB_If)::get(this, "", "APB_If", m_apb_cfg.virtual_apb_if));
         m_env_cfg.m_apb_cfg = m_apb_cfg;
+        m_env_cfg.m_apb_reg_block = m_apb_reg_block;
         uvm_config_db#(env_cfg)::set(this, "*", "env_cfg", m_env_cfg);
         m_env = env::type_id::create(.name("m_env"), .parent(this));
     endfunction: build_phase

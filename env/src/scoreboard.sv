@@ -16,23 +16,30 @@ class APB_Scoreboard extends uvm_scoreboard;
     endfunction : build_phase
 
     virtual function void write(APB_Tr t);
-        if(t.tr_rw == APB_Tr::TR_READ) compare_data(t); // Compare.
-        else RAM_MODEL[t.tr_addr] = t.tr_wdata; // Write data to memory model.
+        if (t.tr_error) begin
+            `uvm_error(get_type_name(), "ERROR:: PERROR raised by the slave")
+            error_count += 1;
+        end else begin
+            if(t.tr_rw == APB_Tr::TR_READ || t.tr_error) compare_data(t); // Compare.
+            else begin
+                if (t.tr_addr == 16'h0) begin
+                    RAM_MODEL[0] = t.tr_wdata; // Write data to register.
+                    RAM_MODEL[1] = (t.tr_wdata ^ 16'hFFFF); // Write data to register invert.
+                end else begin
+                    RAM_MODEL[t.tr_addr] = t.tr_wdata; // Write data to memory model.
+                end
+            end
+        end
     endfunction : write
 
     virtual function void compare_data(APB_Tr this_tr);
         `uvm_info(get_type_name(), $sformatf("Checking Read Value: ADDR: %h, PRDATA: %h, EXPECTED: %h",
             this_tr.tr_addr, this_tr.tr_rdata, RAM_MODEL[this_tr.tr_addr]), UVM_NONE)
-        if (this_tr.tr_error) begin
-            `uvm_error(get_type_name(), "ERROR:: PERROR raised by the slave")
+        if (this_tr.tr_rdata !== RAM_MODEL[this_tr.tr_addr]) begin
+            `uvm_error(get_type_name(), "ERROR:: Data mismatch")
             error_count += 1;
         end else begin
-            if (this_tr.tr_rdata !== RAM_MODEL[this_tr.tr_addr]) begin
-                `uvm_error(get_type_name(), "ERROR:: Data mismatch")
-                error_count += 1;
-            end else begin
-                `uvm_info(get_type_name(), "SUCCESS: Data match", UVM_NONE)
-            end
+            `uvm_info(get_type_name(), "SUCCESS: Data match", UVM_NONE)
         end
     endfunction : compare_data
 
