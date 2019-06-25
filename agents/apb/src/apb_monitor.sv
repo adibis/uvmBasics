@@ -1,3 +1,5 @@
+`ifndef APB_MONITOR__SV
+`define APB_MONITOR__SV
 class apb_monitor extends uvm_monitor;
   `uvm_component_utils(apb_monitor)
 
@@ -36,3 +38,4 @@ class apb_monitor extends uvm_monitor;
   endtask : run_phase
 
 endclass : apb_monitor
+`endif

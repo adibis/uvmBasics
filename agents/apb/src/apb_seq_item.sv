@@ -1,3 +1,5 @@
+`ifndef APB_SEQ_ITEM__SV
+`define APB_SEQ_ITEM__SV
 class apb_seq_item extends uvm_sequence_item;
   // Direction of the transaction. 0 = Read, 1 = Write.
   typedef enum bit {TR_READ, TR_WRITE} trRw_e;
@@ -22,3 +24,4 @@ class apb_seq_item extends uvm_sequence_item;
   `uvm_object_utils_end
 
 endclass: apb_seq_item
+`endif

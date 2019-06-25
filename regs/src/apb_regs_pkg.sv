@@ -1,6 +1,5 @@
 `ifndef APB_REGS_PKG__SV
 `define APB_REGS_PKG__SV
-
 package apb_regs_pkg;
 import uvm_pkg::*;
 

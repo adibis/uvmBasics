@@ -1,3 +1,5 @@
+`ifndef SCOREBOARD__SV
+`define SCOREBOARD__SV
 class chip_scoreboard extends uvm_scoreboard;
     `uvm_component_utils(chip_scoreboard)
 
@@ -53,3 +55,4 @@ class chip_scoreboard extends uvm_scoreboard;
     endfunction : report
 
 endclass : chip_scoreboard
+`endif

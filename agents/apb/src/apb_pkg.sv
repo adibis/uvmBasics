@@ -1,3 +1,5 @@
+`ifndef APB_PKG__SV
+`define APB_PKG__SV
 package apb_pkg;
 
   import uvm_pkg::*;
@@ -13,3 +15,4 @@ package apb_pkg;
   `include "apb_agent.sv"
 
 endpackage : apb_pkg
+`endif

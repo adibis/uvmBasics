@@ -1,6 +1,5 @@
 `ifndef APB_TEST_PKG__SV
 `define APB_TEST_PKG__SV
-
 package apb_test_pkg;
 
     import uvm_pkg::*;

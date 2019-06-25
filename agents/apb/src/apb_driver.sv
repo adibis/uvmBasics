@@ -1,3 +1,5 @@
+`ifndef APB_DRIVER__SV
+`define APB_DRIVER__SV
 class apb_driver extends uvm_driver#(apb_seq_item);
   `uvm_component_utils(apb_driver)
 
@@ -67,3 +69,4 @@ class apb_driver extends uvm_driver#(apb_seq_item);
     end
   endtask: run_phase
 endclass: apb_driver
+`endif
