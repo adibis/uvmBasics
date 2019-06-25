@@ -8,7 +8,7 @@ package chip_seq_lib_pkg;
     `include "uvm_macros.svh"
 
     // Any further package imports:
-    import APB_Package::*;
+    import apb_pkg::*;
     import apb_regs_pkg::*;
 
     // Includes:

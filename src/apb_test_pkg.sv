@@ -4,7 +4,7 @@
 package apb_test_pkg;
 
     import uvm_pkg::*;
-    import APB_Package::*;
+    import apb_pkg::*;
     import env_pkg::*;
     import chip_seq_lib_pkg::*;
 

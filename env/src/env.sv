@@ -4,7 +4,7 @@ class env extends uvm_env;
     `uvm_component_utils(env)
 
     apb_agent m_apb_agent;
-    APB_Scoreboard m_scoreboard;
+    chip_scoreboard m_scoreboard;
     env_cfg m_env_cfg;
     apb_reg_predictor m_apb_reg_predictor;
 
@@ -26,18 +26,18 @@ class env extends uvm_env;
             m_apb_reg_predictor = apb_reg_predictor::type_id::create(.name("m_apb_reg_predictor"), .parent(this));
         end
         if(m_env_cfg.has_scoreboard) begin
-            m_scoreboard = APB_Scoreboard::type_id::create(.name("m_scoreboard"), .parent(this));
+            m_scoreboard = chip_scoreboard::type_id::create(.name("m_scoreboard"), .parent(this));
         end
     endfunction: build_phase
 
     function void connect_phase( uvm_phase phase );
         super.connect_phase(phase);
-        m_apb_agent.apb_ap.connect(m_scoreboard.m_fifo_h);
-        m_env_cfg.m_apb_reg_block.m_reg_map.set_sequencer(.sequencer(m_apb_agent.apb_seqr), .adapter(m_apb_agent.m_reg_adapter));
+        m_apb_agent.m_apb_ap.connect(m_scoreboard.m_fifo);
+        m_env_cfg.m_apb_reg_block.m_reg_map.set_sequencer(.sequencer(m_apb_agent.m_apb_seqr), .adapter(m_apb_agent.m_reg_adapter));
         m_env_cfg.m_apb_reg_block.m_reg_map.set_auto_predict(.on(0));
         m_apb_reg_predictor.map = m_env_cfg.m_apb_reg_block.m_reg_map;
         m_apb_reg_predictor.adapter = m_apb_agent.m_reg_adapter;
-        m_apb_agent.apb_ap.connect(m_apb_reg_predictor.bus_in);
+        m_apb_agent.m_apb_ap.connect(m_apb_reg_predictor.bus_in);
     endfunction: connect_phase
 endclass: env
 `endif

@@ -1,8 +1,8 @@
-class APB_Monitor extends uvm_monitor;
-  `uvm_component_utils(APB_Monitor)
+class apb_monitor extends uvm_monitor;
+  `uvm_component_utils(apb_monitor)
 
-  uvm_analysis_port#(APB_Tr) apb_ap;
-  virtual APB_If virtual_apb_if;
+  uvm_analysis_port#(apb_seq_item) m_apb_ap;
+  virtual apb_if m_apb_vif;
 
   function new(string name = "<anon>", uvm_component parent);
     super.new(name, parent);
@@ -10,29 +10,29 @@ class APB_Monitor extends uvm_monitor;
 
   function void build_phase( uvm_phase phase);
     super.build_phase(phase);
-    apb_ap = new(.name("apb_ap"), .parent(this));
+    m_apb_ap = new(.name("m_apb_ap"), .parent(this));
     // We don't get the VIF in build phase but use the agent connect phase to
     // connect the agent_config.vif to monitor.vif
   endfunction : build_phase
 
   task run_phase(uvm_phase phase);
-      APB_Tr apb_tr = APB_Tr::type_id::create(.name("apb_tr"));
-      APB_Tr clone_tr;
+      apb_seq_item m_apb_seq_item = apb_seq_item::type_id::create(.name("m_apb_seq_item"));
+      apb_seq_item m_clone_item;
     forever begin
-      @virtual_apb_if.slave_cb;
-      @(posedge virtual_apb_if.slave_cb.pready);
+      @m_apb_vif.slave_cb;
+      @(posedge m_apb_vif.slave_cb.pready);
       `uvm_info(get_type_name(), "Monitoring a new transaction", UVM_DEBUG)
-      apb_tr.tr_addr = virtual_apb_if.slave_cb.paddr;
-      apb_tr.tr_wdata = virtual_apb_if.slave_cb.pwdata;
-      apb_tr.tr_rdata = virtual_apb_if.slave_cb.prdata;
-      apb_tr.tr_error = virtual_apb_if.slave_cb.perror;
-      apb_tr.tr_rw   = APB_Tr::trRw_e'(virtual_apb_if.slave_cb.pwrite);
-      $cast(clone_tr, apb_tr.clone());
+      m_apb_seq_item.tr_addr = m_apb_vif.slave_cb.paddr;
+      m_apb_seq_item.tr_wdata = m_apb_vif.slave_cb.pwdata;
+      m_apb_seq_item.tr_rdata = m_apb_vif.slave_cb.prdata;
+      m_apb_seq_item.tr_error = m_apb_vif.slave_cb.perror;
+      m_apb_seq_item.tr_rw   = apb_seq_item::trRw_e'(m_apb_vif.slave_cb.pwrite);
+      $cast(m_clone_item, m_apb_seq_item.clone());
       `uvm_info(get_type_name(), "Writing a new transaction", UVM_DEBUG)
       `uvm_info(get_type_name(), $sformatf("ADDR: %h, TYPE: %h, PRDATA: %h, PWDATA: %h",
-          apb_tr.tr_addr, apb_tr.tr_rw, apb_tr.tr_rdata, apb_tr.tr_wdata), UVM_MEDIUM)
-      apb_ap.write(clone_tr);
+          m_apb_seq_item.tr_addr, m_apb_seq_item.tr_rw, m_apb_seq_item.tr_rdata, m_apb_seq_item.tr_wdata), UVM_MEDIUM)
+      m_apb_ap.write(m_clone_item);
     end
   endtask : run_phase
 
-endclass : APB_Monitor
+endclass : apb_monitor

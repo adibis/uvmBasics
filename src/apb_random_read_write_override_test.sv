@@ -4,7 +4,7 @@
 // --------------------------------------------------------------------------
 `ifndef APB_RANDOM_READ_WRITE_OVERRIDE_TEST__SV
 `define APB_RANDOM_READ_WRITE_OVERRIDE_TEST__SV
-class apb_override_tr extends APB_Tr;
+class apb_override_tr extends apb_seq_item;
     typedef enum bit [1:0] {RAM, ROM, IO} range_e;
 
     function new(string name = "<anon>");
@@ -18,7 +18,7 @@ class apb_override_tr extends APB_Tr;
     }
 
     constraint addr_c {
-        (range == RAM) -> tr_addr inside {[16'h0000:16'hAFFF]};
+        (range == RAM) -> tr_addr inside {[16'h0002:16'hAFFF]};
         (range == IO) -> tr_addr inside {[16'hFF00:16'hFFFF]};
     }
 
@@ -36,9 +36,9 @@ class apb_random_read_write_override_test extends apb_base_test;
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        // Override the default APB_Tr transaction and use the abp_override_tr
+        // Override the default apb_seq_item transaction and use the abp_override_tr
         // mentioned above.
-        APB_Tr::type_id::set_type_override(apb_override_tr::get_type());
+        apb_seq_item::type_id::set_type_override(apb_override_tr::get_type());
     endfunction: build_phase
 
     virtual task run_phase(uvm_phase phase);
@@ -49,7 +49,7 @@ class apb_random_read_write_override_test extends apb_base_test;
         phase.raise_objection(.obj(this));
         repeat(20) begin
             assert(m_seq.randomize());
-            m_seq.start(m_env.m_apb_agent.apb_seqr);
+            m_seq.start(m_env.m_apb_agent.m_apb_seqr);
         end // repeat
         #10ns ;
         phase.drop_objection(.obj(this));

@@ -9,7 +9,7 @@ class apb_cfg extends uvm_object;
     logic [15:0] min_m_addr = 16'h0000;
     logic [15:0] max_m_addr = 16'h007f;
 
-    virtual APB_If virtual_apb_if;
+    virtual apb_if m_apb_vif;
 
     function new(string name="<anon>");
         super.new(name);

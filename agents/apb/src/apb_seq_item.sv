@@ -1,4 +1,4 @@
-class APB_Tr extends uvm_sequence_item;
+class apb_seq_item extends uvm_sequence_item;
   // Direction of the transaction. 0 = Read, 1 = Write.
   typedef enum bit {TR_READ, TR_WRITE} trRw_e;
 
@@ -13,7 +13,7 @@ class APB_Tr extends uvm_sequence_item;
     super.new(name);
   endfunction: new
 
-  `uvm_object_utils_begin(APB_Tr)
+  `uvm_object_utils_begin(apb_seq_item)
       `uvm_field_enum(trRw_e, tr_rw, UVM_ALL_ON)
       `uvm_field_int(tr_addr, UVM_ALL_ON)
       `uvm_field_int(tr_rdata, UVM_ALL_ON)
@@ -21,4 +21,4 @@ class APB_Tr extends uvm_sequence_item;
       `uvm_field_int(tr_error, UVM_ALL_ON)
   `uvm_object_utils_end
 
-endclass: APB_Tr
+endclass: apb_seq_item

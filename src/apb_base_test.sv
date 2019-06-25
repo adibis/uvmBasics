@@ -1,7 +1,7 @@
 `ifndef APB__BASE__TEST__SV
 `define APB__BASE__TEST__SV
 import uvm_pkg::*;
-import APB_Package::*;
+import apb_pkg::*;
 import apb_regs_pkg::*;
 
 class apb_base_test extends uvm_test;
@@ -27,7 +27,7 @@ class apb_base_test extends uvm_test;
         // Finally set the env configuration for everything below.
         m_env_cfg = env_cfg::type_id::create(.name("m_env_cfg"), .parent(this));
         m_apb_cfg = apb_cfg::type_id::create(.name("m_apb_cfg"), .parent(this));
-        assert(uvm_config_db#(virtual APB_If)::get(this, "", "APB_If", m_apb_cfg.virtual_apb_if));
+        assert(uvm_config_db#(virtual apb_if)::get(this, "", "apb_if", m_apb_cfg.m_apb_vif));
         m_env_cfg.m_apb_cfg = m_apb_cfg;
         m_env_cfg.m_apb_reg_block = m_apb_reg_block;
         uvm_config_db#(env_cfg)::set(this, "*", "env_cfg", m_env_cfg);

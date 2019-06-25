@@ -1,6 +1,6 @@
 `ifndef APB__WRITE__SEQ__SV
 `define APB__WRITE__SEQ__SV
-class apb_write_seq extends uvm_sequence#(APB_Tr);
+class apb_write_seq extends uvm_sequence#(apb_seq_item);
     `uvm_object_utils(apb_write_seq)
 
     rand logic [15:0]  m_addr;
@@ -11,12 +11,12 @@ class apb_write_seq extends uvm_sequence#(APB_Tr);
 
     // This task generates a single transaction.
     task body();
-        APB_Tr m_apb_tr;
-        m_apb_tr = APB_Tr::type_id::create(.name("m_apb_tr"));
-        start_item(m_apb_tr);
+        apb_seq_item m_apb_seq_item;
+        m_apb_seq_item = apb_seq_item::type_id::create(.name("m_apb_seq_item"));
+        start_item(m_apb_seq_item);
         // Generate a write transaction.
-        assert(m_apb_tr.randomize() with {m_apb_tr.tr_rw == APB_Tr::TR_WRITE; m_apb_tr.tr_addr == this.m_addr;});
-        finish_item(m_apb_tr);
+        assert(m_apb_seq_item.randomize() with {m_apb_seq_item.tr_rw == apb_seq_item::TR_WRITE; m_apb_seq_item.tr_addr == this.m_addr;});
+        finish_item(m_apb_seq_item);
         // Housekeeping for easier debug during development.
         `uvm_info (get_type_name(), "WRITE:: RESPONSE:: OK", UVM_HIGH)
     endtask: body

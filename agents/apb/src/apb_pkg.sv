@@ -1,9 +1,9 @@
-package APB_Package;
+package apb_pkg;
 
   import uvm_pkg::*;
 
   `include "uvm_macros.svh"
-  `include "apb_tr.sv"
+  `include "apb_seq_item.sv"
   `include "apb_cfg.sv"
   `include "apb_seq_list.sv"
   `include "apb_driver.sv"
@@ -12,4 +12,4 @@ package APB_Package;
   `include "apb_reg_predictor.sv"
   `include "apb_agent.sv"
 
-endpackage : APB_Package
+endpackage : apb_pkg

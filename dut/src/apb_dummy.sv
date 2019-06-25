@@ -1,17 +1,3 @@
-// Class-based Verification
-// APB_dummy.sv
-
-// YOU DO NOT NEED TO MODIFY THIS FILE.
-
-// Dummy APB slave module to act as a device-under-test for
-// testbench lab exercises, reporting on the console all
-// activity it sees on the APB bus so that you can easily
-// see what your testbench did.
-
-// This module merely reports bus activity to the console,
-// and supplies dummy readback data that is the XOR of the
-// most recently written data and the current read address.
-
 module APB_dummy (
     input   bit   PCLK,
     input   bit   PRESET,

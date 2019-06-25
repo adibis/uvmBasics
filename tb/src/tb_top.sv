@@ -8,7 +8,7 @@ module top;
 
 reg pclk;
 
-APB_If    apb_slave_if(pclk);
+apb_if    apb_slave_if(pclk);
 APB_dummy DUT(
     .PCLK   (pclk),
     .PRESET (apb_slave_if.preset ),
@@ -30,7 +30,7 @@ end
 
 initial begin
     // Set interfaces for each of the agents in the testbench from here.
-    uvm_config_db#(virtual APB_If)::set(null, "uvm_test_top", "APB_If", apb_slave_if);
+    uvm_config_db#(virtual apb_if)::set(null, "uvm_test_top", "apb_if", apb_slave_if);
     run_test();
 end
 

@@ -4,7 +4,7 @@
 // --------------------------------------------------------------------------
 `ifndef APB__WRITE__VERIFY__SEQ__SV
 `define APB__WRITE__VERIFY__SEQ__SV
-class apb_write_verify_seq extends uvm_sequence#(APB_Tr);
+class apb_write_verify_seq extends uvm_sequence#(apb_seq_item);
     `uvm_object_utils(apb_write_verify_seq)
 
     apb_cfg m_apb_cfg;

@@ -1,6 +1,6 @@
 `ifndef APB_INTF__SV
 `define APB_INTF__SV
-interface APB_If (input bit pclk);
+interface apb_if (input bit pclk);
 
   // APB synchronous signals defined here
   logic [15:0] paddr, pwdata, prdata;
@@ -23,5 +23,5 @@ interface APB_If (input bit pclk);
   modport master_sync_mp (clocking master_cb);
   modport slave_sync_mp (clocking slave_cb);
 
-endinterface : APB_If
+endinterface : apb_if
 `endif

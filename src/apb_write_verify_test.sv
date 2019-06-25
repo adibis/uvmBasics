@@ -15,15 +15,20 @@ class apb_write_verify_test extends apb_base_test;
     endfunction: build_phase
 
     virtual task run_phase(uvm_phase phase);
-        apb_write_verify_seq m_seq_h;
+        apb_write_verify_seq m_seq;
 
         // Raise objection so the test will not end. Dropping it will end the test.
         phase.raise_objection(.obj(this));
-        m_seq_h = apb_write_verify_seq::type_id::create(.name("m_seq_h"));
+        m_seq = apb_write_verify_seq::type_id::create(.name("m_seq"));
+        // Override the address constraints to generate out-of-bound addresses which should result in an error.
+        m_apb_cfg.min_m_addr=16'h0002;
+        m_apb_cfg.max_m_addr=16'h0080;
+        assert(m_seq.randomize());
+        `uvm_info(get_type_name(), {"\n", m_seq.sprint()}, UVM_LOW)
 
         // Set the generated sequence on the sequencer port of the agent.
         // The driver will pick up a transaction each and driver it.
-        m_seq_h.start(m_env.m_apb_agent.apb_seqr);
+        m_seq.start(m_env.m_apb_agent.m_apb_seqr);
         #10ns ;
         phase.drop_objection(.obj(this));
     endtask: run_phase

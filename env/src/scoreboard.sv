@@ -1,7 +1,7 @@
-class APB_Scoreboard extends uvm_scoreboard;
-    `uvm_component_utils(APB_Scoreboard)
+class chip_scoreboard extends uvm_scoreboard;
+    `uvm_component_utils(chip_scoreboard)
 
-    uvm_analysis_imp#(APB_Tr, APB_Scoreboard) m_fifo_h;
+    uvm_analysis_imp#(apb_seq_item, chip_scoreboard) m_fifo;
     int error_count;
     bit [15:0] RAM_MODEL[int];
 
@@ -12,15 +12,15 @@ class APB_Scoreboard extends uvm_scoreboard;
 
     function void build_phase( uvm_phase phase);
         super.build_phase(phase);
-        m_fifo_h = new("m_fifo_h", this);
+        m_fifo = new("m_fifo", this);
     endfunction : build_phase
 
-    virtual function void write(APB_Tr t);
+    virtual function void write(apb_seq_item t);
         if (t.tr_error) begin
             `uvm_error(get_type_name(), "ERROR:: PERROR raised by the slave")
             error_count += 1;
         end else begin
-            if(t.tr_rw == APB_Tr::TR_READ || t.tr_error) compare_data(t); // Compare.
+            if(t.tr_rw == apb_seq_item::TR_READ) compare_data(t); // Compare.
             else begin
                 if (t.tr_addr == 16'h0) begin
                     RAM_MODEL[0] = t.tr_wdata; // Write data to register.
@@ -32,7 +32,7 @@ class APB_Scoreboard extends uvm_scoreboard;
         end
     endfunction : write
 
-    virtual function void compare_data(APB_Tr this_tr);
+    virtual function void compare_data(apb_seq_item this_tr);
         `uvm_info(get_type_name(), $sformatf("Checking Read Value: ADDR: %h, PRDATA: %h, EXPECTED: %h",
             this_tr.tr_addr, this_tr.tr_rdata, RAM_MODEL[this_tr.tr_addr]), UVM_NONE)
         if (this_tr.tr_rdata !== RAM_MODEL[this_tr.tr_addr]) begin
@@ -52,4 +52,4 @@ class APB_Scoreboard extends uvm_scoreboard;
         `uvm_info(get_type_name(), $sformatf("Error_Count = %h", this.error_count), UVM_NONE)
     endfunction : report
 
-endclass : APB_Scoreboard
+endclass : chip_scoreboard
