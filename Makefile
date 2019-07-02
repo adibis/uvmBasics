@@ -43,7 +43,7 @@ prep_vcs:
 run_vcs:
 	mkdir -p $(WORK_DIR) && \
 	cd $(WORK_DIR) && \
-	Vcs $(vcs_compile_opts) $(compile_files) && \
+	vcs $(vcs_compile_opts) $(compile_files) && \
 	./simv $(vcs_run_opts)
 
 clean_vcs:
